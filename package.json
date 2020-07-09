@@ -1,0 +1,19 @@
+{
+  "name": "guesswhomapi",
+  "version": "1.0.0",
+  "description": "api app for guesswho data",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loganwatanabe/guesswhom-api.git"
+  },
+  "author": "loganwatanabe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/loganwatanabe/guesswhom-api/issues"
+  },
+  "homepage": "https://github.com/loganwatanabe/guesswhom-api#readme"
+}
