@@ -2,9 +2,9 @@
   "name": "guesswhomapi",
   "version": "1.0.0",
   "description": "api app for guesswho data",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "test"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/loganwatanabe/guesswhom-api/issues"
   },
-  "homepage": "https://github.com/loganwatanabe/guesswhom-api#readme"
+  "homepage": "https://github.com/loganwatanabe/guesswhom-api#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase-admin": "^8.10.0"
+  }
 }
