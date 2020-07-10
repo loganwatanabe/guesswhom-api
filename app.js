@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
     console.log(`API listening on port ${port}`);
@@ -18,9 +18,10 @@ app.get('/', async (req, res) => {
 admin.initializeApp({
 	credential: admin.credential.applicationDefault()
 })
+
 const db = admin.firestore();
 
-app.get('/:boardId', async(req, res){
+app.get('/:boardId', async(req, res)=>{
 	let id = req.params.boardId;
 	let boardsRef = db.connection('boards');
 	let query = boardsRef.where("id", "==", id);
@@ -30,4 +31,4 @@ app.get('/:boardId', async(req, res){
 	})
 
 	res.json(returnVal)
-})
+});
