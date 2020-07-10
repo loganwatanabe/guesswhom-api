@@ -23,12 +23,13 @@ const db = admin.firestore();
 
 app.get('/:boardId', async(req, res)=>{
 	let id = req.params.boardId;
-	let boardsRef = db.connection('boards');
-	let query = boardsRef.where("id", "==", id);
-	let results = await query.get();
-	let returnVal = results.docs.map(doc =>{
-		return {...doc.data()}
-	})
+	// let boardsRef = db.connection('boards');
+	// // let query = boardsRef.where("id", "==", id);
+	// let results = boardsRef.doc(id).get();
+	// // let results = await query.get();
+	// let returnVal = results.docs.map(doc =>{
+	// 	return {...doc.data()}
+	// })
 
-	res.json(returnVal)
+	res.json({id: id})
 });
