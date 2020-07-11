@@ -11,7 +11,6 @@ app.listen(port, () => {
 });
 
 app.get('/', async (req, res) => {
-	console.log(req.query)
     res.json({status: 'API running'});
 })
 
@@ -51,11 +50,6 @@ app.get('/query', async(req, res)=>{
 	const size = req.query.size
 	const active = req.query.active
 
-	console.log("name: "+name)
-	console.log("bydate: "+bydate)
-	console.log("active: "+active)
-	console.log("size: "+size)
-
 	let boardsRef = db.collection('boards');
 	let query = boardsRef
 
@@ -93,14 +87,14 @@ app.get('/query', async(req, res)=>{
 //create boards
 app.post('/boards', async (req, res) => {
     const data = {
-        name: req.body.name,
-        cards: req.body.cards,
-        active: req.body.active,
-        created: req.body.created
+        name: req.body.name || "New Board",
+        cards: req.body.cards || [],
+        active: req.body.active || true,
+        created: admin.firestore.Timestamp.now()
     }
 
-    await db.collection('boards').doc().add(data).then(function(docRef) {
-    	res.json({ status: 'success', data: { id: docRef.id, board: data } });
+    await db.collection('boards').add(data).then(function(docRef) {
+    	res.json({ status: 'success', data: { id: docRef.id, ...data } });
 	})
 	.catch(function(error) {
 		res.status(500).send(error);
@@ -108,35 +102,35 @@ app.post('/boards', async (req, res) => {
 })
 
 //update boards
+//https://cloud.google.com/firestore/docs/manage-data/add-data
 app.put('/boards/:boardId', async(req, res)=>{
 	try {
+	    const id = req.params.boardId;
+	    if (!id) throw new Error('id is blank');
 
-    const id = req.params.boardId;
+	    const data = {}
+	    //probably should put some more validations in here
+	    if(req.body.name){ data.name = req.body.name}
+	    if(req.body.active){ data.active = req.body.active}
+	    if(req.body.cards){ data.cards = req.body.cards}
 
-    if (!id) throw new Error('id is blank');
-
-    const data = {}
-    //probably should put some more validations in here
-    if(req.body.name){ data.name = req.body.name}
-    if(req.body.active){ data.active = req.body.active}
-    if(req.body.cards){ data.cards = req.body.cards}
-    if(req.body.created){ data.created = req.body.created}
-
-    const boardsRef = await db.collection('boards')
-        .doc(id)
-        .set(data, { merge: true });
-
-    res.json({
-        id: id,
-        data
-    })
+	    const boardsRef = await db.collection('boards').doc(id).update(data).then(function(docRef) {
+		    console.log(docRef)
+		    res.json({
+		    	status: 'sucess',
+		        id: id
+		    })
+		})
+		.catch(function(error) {
+		    res.status(500).send(error);
+		});
 
 
-  } catch(error){
+	} catch(error){
 
-    res.status(500).send(error);
+		res.status(500).send(error);
 
-  }
+	}
 });
 
 
@@ -148,11 +142,10 @@ app.delete('/boards/:boardId', async (req, res) => {
 
     if (!id) throw new Error('id is blank');
 
-    await db.collection('boards')
-        .doc(id)
-        .delete();
+    await db.collection('boards').doc(id).delete();
 
     res.json({
+    	status: 'success',
         id: id,
     })
 
