@@ -1,8 +1,9 @@
 const admin = require('firebase-admin');
 const express = require('express');
-
+const cors = require('cors');
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const port = process.env.PORT || 8080;
 
@@ -99,7 +100,7 @@ app.post('/boards', async (req, res) => {
     }
 
     await db.collection('boards').add(data).then(function(docRef) {
-    	res.json({ status: 'success', data: { id: docRef.id, ...data } });
+    	res.json({ status: 'success', data: { document_id: docRef.id, ...data } });
 	})
 	.catch(function(error) {
 		res.status(500).send(error);
@@ -123,7 +124,7 @@ app.put('/boards/:boardId', async(req, res)=>{
 		    console.log(docRef)
 		    res.json({
 		    	status: 'sucess',
-		        id: id
+		        document_id: id
 		    })
 		})
 		.catch(function(error) {
@@ -151,7 +152,7 @@ app.delete('/boards/:boardId', async (req, res) => {
 
     res.json({
     	status: 'success',
-        id: id,
+        document_id: id,
     })
 
 
