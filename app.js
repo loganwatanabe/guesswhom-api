@@ -45,10 +45,11 @@ app.get('/all', async(req, res)=>{
 });
 
 app.get('/query', async(req, res)=>{
-	const name = req.query.name
-	const bydate = req.query.bydate
-	const size = req.query.size
-	const active = req.query.active
+	const name = req.query.name;
+	const bydate = req.query.bydate;
+	const size = req.query.size;
+	const active = req.query.active;
+	const details = req.query.details || false;
 
 	let boardsRef = db.collection('boards');
 	let query = boardsRef
@@ -72,6 +73,10 @@ app.get('/query', async(req, res)=>{
 		query = query.limit(s)
 	}else{
 		query = query.limit(25)
+	}
+
+	if(details!=="true"){
+		query=query.select("name", "created", "active")
 	}
 
 	let results = await query.get();
